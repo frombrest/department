@@ -6,10 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +24,12 @@ public class WebAppServiceImpl implements WebAppService {
     private final static Logger logger = LogManager.getLogger(WebAppServiceImpl.class);
 
     @Override
-    public Map<Integer, String> getAverageSalary() {
-        Map<Integer, String> result = new HashMap<Integer, String>();
+    public Map<Integer, Double> getAverageSalary() {
+        Map<Integer, Double> result = new HashMap<Integer, Double>();
         RestTemplate restTemplate = new RestTemplate();
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormatSymbols separatorSymbol = new DecimalFormatSymbols();
+        separatorSymbol.setDecimalSeparator('.');
+        DecimalFormat df = new DecimalFormat("#0.00", separatorSymbol);
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         Department[] deps = restTemplate.getForObject("http://localhost:8080/departmentrest/department", Department[].class);
         for (Department department:deps){
@@ -38,11 +40,11 @@ public class WebAppServiceImpl implements WebAppService {
                 for (Employee employee : empls)
                     avsalary += employee.getSalary();
                 avsalary /= empls.length;
-                logger.debug("A.S. for Department "+ department.getId()+" is: "+df.format(avsalary));
-                result.put(department.getId(),df.format(avsalary));
+                logger.debug("A.S. for Department "+ department.getId()+" is: " + new Double(df.format(avsalary).toString()));
+                result.put(department.getId(), new Double(df.format(avsalary).toString()));
             } else {
-                logger.debug("A.S. for Department "+ department.getId()+" is: 0,00");
-                result.put(department.getId(),"0,00");
+                logger.debug("A.S. for Department "+ department.getId()+" is: 0.00");
+                result.put(department.getId(),0.00);
             }
         }
         return result;

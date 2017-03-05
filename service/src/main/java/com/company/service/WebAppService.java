@@ -13,6 +13,6 @@ import java.util.Map;
 
 public interface WebAppService {
 
-    public Map<Integer, String> getAverageSalary();
+    public Map<Integer, Double> getAverageSalary();
     public List<Employee> getEmployeesByDepartmentId(int id);
 }

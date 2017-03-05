@@ -22,16 +22,16 @@
                     <c:forEach var="dep" items="${ldep}">
                 	<tr>
                 		<td>${dep.id}</td>
-                		<td><a href="departments/${dep.id}">${dep.name}</a></td>
+                		<td><a href="/departmentweb/departments/${dep.id}">${dep.name}</a></td>
                 		<td><c:out value="${aversalary[(dep.id).intValue()]}"/></td>
-                		<td><a href="departments/edit-department/${dep.id}">Edit</a></td>
-                		<td><a href="departments/delete-department/${dep.id}">Delete</a></td>
+                		<td><a href="/departmentweb/departments/edit-department/${dep.id}">Edit</a></td>
+                		<td><a href="/departmentweb/departments/delete-department/${dep.id}">Delete</a></td>
                 	</tr>
                 	</c:forEach>
                 </tbody>
                 </table>
         <br/>
-        <a href="departments/add-department">New department</a>
+        <a href="/departmentweb/departments/add-department">New department</a>
     </body>
 </html>
 

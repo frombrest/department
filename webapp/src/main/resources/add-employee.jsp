@@ -5,26 +5,18 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Edit employee</title>
+        <title>New employee</title>
     </head>
     <body>
-        <h1>Edit employee</h1>
-               <f:form method="POST" commandName="department" action="/departmentweb/departments/${employee.department_id}/edit-employee/${employee.id}" accept-charset="UTF-8" modelAttribute="employee">
+        <h1>New employee</h1>
+               <f:form method="POST" commandName="department" action="/departmentweb/departments/${current_department}/add-employee" accept-charset="UTF-8" modelAttribute="employee">
             <table>
-                <tr>
-                    <td>
-                        <i>Id:</i>
-                    </td>
-                    <td>
-                        <b>${employee.id}</b><f:input path="id" hidden="true" value="${employee.id}"/>
-                    </td>
-                </tr>
                 <tr>
                     <td>
                         <i>Name:</i>
                     </td>
                     <td>
-                        <f:input path="full_name" value="${employee.full_name}"/>
+                        <f:input path="full_name" />
                     </td>
                 </tr>
                 <tr>
@@ -32,7 +24,7 @@
                         <i>Date of birth:</i>
                     </td>
                     <td>
-                        <f:input path="date_of_birth" value="${employee.date_of_birth}"/>
+                        <f:input path="date_of_birth" value="1950-06-06"/>
                     </td>
                 </tr>
                 <tr>
@@ -40,7 +32,7 @@
                         <i>Salary:</i>
                     </td>
                     <td>
-                        <f:input path="salary" value="${employee.salary}"/>
+                        <f:input path="salary" />
                     </td>
                 </tr>
                 <tr>
@@ -50,18 +42,17 @@
                     <td>
                         <f:select path="department_id">
                         <c:forEach var="department" items="${departments}">
-                            <option value="${department.id}" ${(department.id==employee.department_id)?"selected":""}>${department.name}</option>
+                            <option value="${department.id}" ${(department.id==current_department)?"selected":""}>${department.name}</option>
                         </c:forEach>
                         </f:select>
                     </td>
                 </tr>
                 <tr>
-                    <td><input type="submit" value="Edit"/></td>
+                    <td><input type="submit" value="Create"/></td>
                 </tr>
             </table>
         </f:form>
         <br/>
-
-        <a href="/departmentweb/departments/${employee.department_id}">Cancel</a>
+        <a href="/departmentweb/departments/${current_department}">Cancel</a>
     </body>
 </html>

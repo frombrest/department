@@ -6,18 +6,14 @@ import com.company.service.WebAppService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -72,6 +68,64 @@ public class DepartmentController {
         return "employees";
     }
 
+    @RequestMapping(value = "{id}", params = "date_of_birth")
+    public String showEmployees(@PathVariable int id, Model model, @RequestParam("date_of_birth") String date_of_birth){
+        logger.debug("Show employees form department:" + id + " with filter by date of birth:" + date_of_birth);
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        Employee[] employees = restTemplate.getForObject("http://localhost:8080/departmentrest/employee/?department=" + id, Employee[].class);
+        Department department = restTemplate.getForObject("http://localhost:8080/departmentrest/department/" + id, Department.class);
+        if (date_of_birth.length()==0)
+            return "redirect:/departments/"+id;
+        List<Employee> result = new ArrayList<Employee>();
+        for (Employee employee:employees){
+            if (employee.getDate_of_birth().toString().equals(date_of_birth)){
+                result.add(employee);
+            }
+        }
+        model.addAttribute("date_of_birth", date_of_birth);
+        model.addAttribute("employees", result);
+        model.addAttribute("department", department);
+        return "employees";
+    }
+
+
+    @RequestMapping(value = "{id}", params = {"date_from","date_to"})
+    public String showEmployees(@PathVariable int id, Model model, @RequestParam("date_from") String date_from, @RequestParam("date_to") String date_to){
+
+        logger.debug("Show employees form department:" + id + " with filter by interval of birth dates from:" + date_from + " to:"+ date_to);
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        Employee[] employees = restTemplate.getForObject("http://localhost:8080/departmentrest/employee/?department=" + id, Employee[].class);
+        Department department = restTemplate.getForObject("http://localhost:8080/departmentrest/department/" + id, Department.class);
+
+        if ((date_from.length()==0) && (date_to.length()==0))
+            return "redirect:/departments/"+id;
+        List<Employee> result = new ArrayList<Employee>();
+
+
+        for (Employee employee:employees){
+            if (employee.getDate_of_birth().toString().equals(date_from)){
+                result.add(employee);
+            }
+        }
+
+        model.addAttribute("date_from", date_from);
+        model.addAttribute("date_to", date_to);
+        model.addAttribute("employees", result);
+        model.addAttribute("department", department);
+
+        return "employees";
+    }
+
+
+
+
+
+
+
     @RequestMapping(value = "add-department", method = RequestMethod.GET)
     public String newDepartment(){
         logger.debug("Add department");
@@ -122,6 +176,33 @@ public class DepartmentController {
         model.addAttribute("employee", employee);
         model.addAttribute("departments", departments);
         return "edit-employee";
+    }
+
+    @RequestMapping(value = "{dep_id}/edit-employee/{emp_id}", method = RequestMethod.POST)
+    public String editEmployee(@ModelAttribute("employee") Employee employee, @PathVariable int dep_id, @PathVariable int emp_id) {
+        RestTemplate restTemplate = new RestTemplate();
+        logger.debug("Edit employee with id:" + emp_id + " form department: " + dep_id);
+        restTemplate.put("http://localhost:8080/departmentrest/employee/", employee, Employee.class);
+        return "redirect:/departments/" + dep_id;
+    }
+
+    @RequestMapping(value = "{dep_id}/add-employee", method = RequestMethod.GET)
+    public String newEmployee(Model model, @PathVariable int dep_id){
+        logger.debug("Add employee");
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        Department[] departments = restTemplate.getForObject("http://localhost:8080/departmentrest/department", Department[].class);
+        model.addAttribute("departments", departments);
+        model.addAttribute("current_department", dep_id);
+        return "add-employee";
+    }
+
+    @RequestMapping(value = "{dep_id}/add-employee", method = RequestMethod.POST)
+    public String newEmployee(@ModelAttribute("employee") Employee employee, Model model, @PathVariable int dep_id){
+        logger.debug("Add employee");
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.postForObject("http://localhost:8080/departmentrest/employee/", employee, Employee.class);
+        return "redirect:/departments/" + dep_id;
     }
 
 

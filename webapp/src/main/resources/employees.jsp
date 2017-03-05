@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -32,6 +33,37 @@
                 	</c:forEach>
                 </tbody>
                 </table>
+                <br/>
+                <form method="GET" action="" accept-charset="UTF-8">
+                    <table>
+                        <tr>
+                            <td>Date of birth</td>
+                            <td><input name="date_of_birth" type="text" value="${date_of_birth}"/></td>
+                        </tr>
+                        <tr>
+                            <td><input type="submit" value="Find"/></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </form>
+                <br/>
+                <br/>
+                <form method="GET" action="" accept-charset="UTF-8">
+                    <table>
+                        <tr>
+                            <td>Date from</td>
+                            <td><input name="date_from" type="text" value="${date_from}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Date to</td>
+                            <td><input name="date_to" type="text" value="${date_to}"/></td>
+                        </tr>
+                        <tr>
+                            <td><input type="submit" value="Find"/></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </form>
         <br/>
         <a href="/departmentweb/departments">Back</a> | <a href="/departmentweb/departments/${department.id}/add-employee">New employee</a>
     </body>
