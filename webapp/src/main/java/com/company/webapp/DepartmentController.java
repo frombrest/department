@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,34 +99,71 @@ public class DepartmentController {
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
         Employee[] employees = restTemplate.getForObject("http://localhost:8080/departmentrest/employee/?department=" + id, Employee[].class);
         Department department = restTemplate.getForObject("http://localhost:8080/departmentrest/department/" + id, Department.class);
-
-        if ((date_from.length()==0) && (date_to.length()==0))
-            return "redirect:/departments/"+id;
         List<Employee> result = new ArrayList<Employee>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+        if ((date_from.length()==0) & (date_to.length()==0))
+            return "redirect:/departments/"+id;
 
-        for (Employee employee:employees){
-            if (employee.getDate_of_birth().toString().equals(date_from)){
-                result.add(employee);
+        if ((date_from.length()==0) & (date_to.length()!=0)){
+            //все работники старше чем date_to
+            for (Employee employee:employees){
+                java.util.Date employerDate = new java.util.Date();
+                java.util.Date toDate = new java.util.Date();
+                try {
+                    employerDate = sdf.parse(employee.getDate_of_birth().toString());
+                    toDate = sdf.parse(date_to);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                logger.debug(employerDate.compareTo(toDate));
+                if (employerDate.compareTo(toDate)<=0){
+                    result.add(employee);
+                }
             }
+            model.addAttribute("date_to", date_to);
+        } else if ((date_from.length()!=0) & (date_to.length()==0)){
+            //все работники младше чем date_from
+            for (Employee employee:employees){
+                java.util.Date employerDate = new java.util.Date();
+                java.util.Date fromDate = new java.util.Date();
+                try {
+                    employerDate = sdf.parse(employee.getDate_of_birth().toString());
+                    fromDate = sdf.parse(date_from);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (employerDate.compareTo(fromDate)>=0){
+                    result.add(employee);
+                }
+            }
+            model.addAttribute("date_from", date_from);
+        } else {
+            //все работники в промежутке от date_from до date_to
+            for (Employee employee:employees){
+                java.util.Date employerDate = new java.util.Date();
+                java.util.Date toDate = new java.util.Date();
+                java.util.Date fromDate = new java.util.Date();
+                try {
+                    employerDate = sdf.parse(employee.getDate_of_birth().toString());
+                    fromDate = sdf.parse(date_from);
+                    toDate = sdf.parse(date_to);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if ((employerDate.compareTo(fromDate)>=0) & (employerDate.compareTo(toDate)<=0)){
+                    result.add(employee);
+                }
+            }
+            model.addAttribute("date_from", date_from);
+            model.addAttribute("date_to", date_to);
         }
-
-        model.addAttribute("date_from", date_from);
-        model.addAttribute("date_to", date_to);
         model.addAttribute("employees", result);
         model.addAttribute("department", department);
-
         return "employees";
     }
-
-
-
-
-
-
 
     @RequestMapping(value = "add-department", method = RequestMethod.GET)
     public String newDepartment(){
