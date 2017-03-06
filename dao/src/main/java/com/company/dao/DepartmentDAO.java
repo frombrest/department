@@ -1,7 +1,6 @@
 package com.company.dao;
 
 import com.company.model.Department;
-
 import java.util.List;
 
 /**

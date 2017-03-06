@@ -19,7 +19,7 @@
                 	</tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="dep" items="${ldep}">
+                    <c:forEach var="dep" items="${departments}">
                 	<tr>
                 		<td>${dep.id}</td>
                 		<td><a href="/departmentweb/departments/${dep.id}">${dep.name}</a></td>

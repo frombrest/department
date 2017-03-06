@@ -3,7 +3,6 @@ package com.company.service;
 import com.company.dao.DepartmentDAO;
 import com.company.model.Department;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.List;
 

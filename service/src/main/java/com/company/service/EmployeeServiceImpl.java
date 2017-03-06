@@ -3,9 +3,7 @@ package com.company.service;
 import com.company.dao.EmployeeDAO;
 import com.company.model.Employee;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -29,14 +27,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> getEmployeesByDepartmentId(int id) {
         return employeeDAO.getByDepartmentId(id);
     }
-
-    /*public List<Employee> getEmployeesByDateOfBirth(LocalDate date) {
-        return employeeDAO.getByDateOfBirth(date);
-    }
-
-    public List<Employee> getEmployeesByIntervalOfBirthDates(LocalDate dateFrom, LocalDate dateTo) {
-        return employeeDAO.getByIntervalOfBirthDates(dateFrom, dateTo);
-    }*/
 
     public Employee getEmployeeById(int id) {
         return employeeDAO.getById(id);

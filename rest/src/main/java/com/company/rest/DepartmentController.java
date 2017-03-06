@@ -6,8 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.util.List;
 
 /**
@@ -24,13 +22,11 @@ public class DepartmentController {
 
     @RequestMapping(method = RequestMethod.GET, headers = "Accept=application/json")
     public List<Department> getAllDepartments() {
-        logger.debug("Get all departments");
         return departmentService.getAllDepartments();
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, headers = "Accept=application/json")
     public Department getDepartmentById(@PathVariable int id) {
-        logger.debug("Get department with id:" + id);
         return departmentService.getDepartmentById(id);
     }
 

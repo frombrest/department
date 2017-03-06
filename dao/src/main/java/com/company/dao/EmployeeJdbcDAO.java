@@ -7,10 +7,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -50,7 +48,6 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
             logger.debug("Employee with id=" + id + " not found. Result == null");
         }
         return employee;
-
     }
 
     @Override
@@ -77,29 +74,6 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
         return listEmployee;
     }
 
-    /*public List<Employee> getByDateOfBirth(LocalDate date) {
-        List<Employee> listEmployee = null;
-        try {
-            listEmployee = jdbcTemplate.query(
-                    "SELECT * FROM \"TW\".\"Employee\" WHERE \"date_of_birth\" = ?",
-                    new Object[]{date.toString()}, new RowMapper<Employee>() {
-                        public Employee mapRow(ResultSet resultSet, int i) throws SQLException {
-                            Employee employee = new Employee();
-                            employee.setId(resultSet.getInt("id"));
-                            employee.setFull_name(resultSet.getString("full_name"));
-                            employee.setDate_of_birth(resultSet.getDate("date_of_birth"));
-                            employee.setDepartment_id(resultSet.getInt("department_id"));
-                            employee.setSalary(resultSet.getDouble("salary"));
-                            return employee;
-                        }
-                    }
-            );
-        } catch (EmptyResultDataAccessException exception) {
-            logger.debug("Employees not found. Result == null");
-        }
-        return listEmployee;
-    }*/
-
     public List<Employee> getAll() {
         List<Employee> listEmployee = null;
         try {
@@ -122,30 +96,6 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
         }
         return listEmployee;
     }
-
-
-    /*public List<Employee> getByIntervalOfBirthDates(LocalDate dateFrom, LocalDate dateTo) {
-        List<Employee> listEmployee = null;
-        try {
-            listEmployee = jdbcTemplate.query(
-                    "SELECT * FROM \"TW\".\"Employee\" WHERE \"date_of_birth\" BETWEEN ? AND ?",
-                    new Object[]{dateFrom.toString(), dateTo.toString()}, new RowMapper<Employee>() {
-                        public Employee mapRow(ResultSet resultSet, int i) throws SQLException {
-                            Employee employee = new Employee();
-                            employee.setId(resultSet.getInt("id"));
-                            employee.setFull_name(resultSet.getString("full_name"));
-                            employee.setDate_of_birth(resultSet.getDate("date_of_birth"));
-                            employee.setDepartment_id(resultSet.getInt("department_id"));
-                            employee.setSalary(resultSet.getDouble("salary"));
-                            return employee;
-                        }
-                    }
-            );
-        } catch (EmptyResultDataAccessException exception) {
-            logger.debug("Employees not found. Result == null");
-        }
-        return listEmployee;
-    }*/
 
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM \"TW\".\"Employee\" WHERE \"id\"= ?;", id);
