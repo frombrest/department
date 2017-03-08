@@ -37,7 +37,7 @@ public class WebAppServiceImpl implements WebAppService {
         Department[] deps = restTemplate.getForObject(APPURL + "department", Department[].class);
         for (Department department:deps){
             logger.debug("A.S. for Department with id: "+ department.getId());
-            Employee[] empls = restTemplate.getForObject(APPURL + "employee/?department=" + department.getId(), Employee[].class);
+            Employee[] empls = this.getEmployeesByDepartmentId(department.getId());
             double avsalary = 0;
             if(empls.length>0) {
                 for (Employee employee : empls)
@@ -57,7 +57,7 @@ public class WebAppServiceImpl implements WebAppService {
     public List<Employee> searchEmployeesByDateOfBirth(int departmentId, String dateOfBirth) {
         List<Employee> result = new ArrayList<>();
         logger.debug("Show employees form department:" + departmentId + " with filter by date of birth:" + dateOfBirth);
-        Employee[] employees = restTemplate.getForObject(APPURL + "employee/?department=" + departmentId, Employee[].class);
+        Employee[] employees = this.getEmployeesByDepartmentId(departmentId);
         for (Employee employee:employees){
             if (employee.getDate_of_birth().toString().equals(dateOfBirth)){
                 result.add(employee);
@@ -70,7 +70,7 @@ public class WebAppServiceImpl implements WebAppService {
     public List<Employee> searchEmployeesByIntervalOfBirthdates(int departmentId, String dateFrom, String dateTo) {
         logger.debug("Show employees form department:" + departmentId + " with filter by interval of birth dates from:" + dateFrom + " to:"+ dateTo);
         List<Employee> result = new ArrayList<>();
-        Employee[] employees = restTemplate.getForObject(APPURL + "employee/?department=" + departmentId, Employee[].class);
+        Employee[] employees = this.getEmployeesByDepartmentId(departmentId);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date employerDate = new java.util.Date();
         Date toDate = new java.util.Date();
