@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Created by frombrest on 24.2.17.
  */
+
 @Service(value = "departmentService")
 public class DepartmentServiceImpl implements DepartmentService {
 

@@ -16,7 +16,9 @@
     <mvc:annotation-driven/>
     <context:component-scan base-package="com.company.rest"/>
     <context:component-scan base-package="com.company.dao"/>
-    <context:component-scan base-package="com.company.service"/>
+    <context:component-scan base-package="com.company.service">
+        <context:exclude-filter type="assignable" expression="com.company.service.WebAppServiceImpl"/>
+    </context:component-scan>
 
     <jdbc:embedded-database id="dataSource" type="HSQL">
         <jdbc:script location="classpath:create-db.sql" />

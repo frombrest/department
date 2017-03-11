@@ -4,7 +4,7 @@ import com.company.model.Department;
 import com.company.model.Employee;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.text.DecimalFormat;
@@ -22,11 +22,9 @@ public class WebAppServiceImpl implements WebAppService {
 
     private final static Logger logger = LogManager.getLogger(WebAppServiceImpl.class);
     private final static String APPURL = "http://localhost:8080/departmentrest/";
-    private RestTemplate restTemplate = new RestTemplate();
 
-    public WebAppServiceImpl() {
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-    }
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public Map<Integer, Double> getAverageSalary() {
@@ -34,7 +32,7 @@ public class WebAppServiceImpl implements WebAppService {
         DecimalFormatSymbols separatorSymbol = new DecimalFormatSymbols();
         separatorSymbol.setDecimalSeparator('.');
         DecimalFormat df = new DecimalFormat("#0.00", separatorSymbol);
-        Department[] deps = restTemplate.getForObject(APPURL + "department", Department[].class);
+        Department[] deps = this.getDepartments();
         for (Department department:deps){
             logger.debug("A.S. for Department with id: "+ department.getId());
             Employee[] empls = this.getEmployeesByDepartmentId(department.getId());
@@ -122,7 +120,6 @@ public class WebAppServiceImpl implements WebAppService {
 
     @Override
     public void createDepartment(Department department) {
-        logger.debug("New department: " + department.getName());
         restTemplate.postForObject(APPURL + "department/", department, Department.class);
     }
 
@@ -138,19 +135,16 @@ public class WebAppServiceImpl implements WebAppService {
 
     @Override
     public void updateDepartment(Department department) {
-        logger.debug("Edit department with id: " + department.getId() + " and new name: " + department.getName());
         restTemplate.put(APPURL + "department/", department, Department.class);
     }
 
     @Override
     public void deleteDepartmentById(int id) {
-        logger.debug("Delete department with id:" + id);
         restTemplate.delete(APPURL + "department/" + id);
     }
 
     @Override
     public void createEmployee(Employee employee) {
-        logger.debug("Add employee with name: " + employee.getFull_name());
         restTemplate.postForObject(APPURL + "employee/", employee, Employee.class);
     }
 
@@ -161,19 +155,16 @@ public class WebAppServiceImpl implements WebAppService {
 
     @Override
     public Employee[] getEmployeesByDepartmentId(int id) {
-        logger.debug("Get employees form department with id:" + id);
         return restTemplate.getForObject(APPURL + "employee/?department=" + id, Employee[].class);
     }
 
     @Override
     public void updateEmployee(Employee employee) {
-        logger.debug("Edit employee with id:" + employee.getId());
         restTemplate.put(APPURL + "employee/", employee, Employee.class);
     }
 
     @Override
     public void deleteEmployeeById(int id) {
-        logger.debug("Delete employee with id:" + id);
         restTemplate.delete(APPURL + "employee/" + id);
     }
 

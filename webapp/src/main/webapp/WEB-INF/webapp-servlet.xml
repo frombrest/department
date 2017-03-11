@@ -16,11 +16,20 @@
 
     <bean class="com.company.service.WebAppServiceImpl" />
 
-
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/classes/" />
         <property name="suffix" value=".jsp" />
     </bean>
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <property name="messageConverters">
+            <list>
+                <ref bean="mappingJackson2HttpMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="mappingJackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
 
 
 
