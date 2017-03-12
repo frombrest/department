@@ -11,12 +11,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 /**
  * Created by frombrest on 12.3.17.
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:test-rest.xml"})
-public class DepartmentControllerTest {
+public class EmployeeControllerTest {
 
     private MockMvc mockMvc;
     @Autowired
@@ -37,40 +37,49 @@ public class DepartmentControllerTest {
     }
 
     @Test
-    public void getAllDepartments() throws Exception {
-        mockMvc.perform(get("/department").contentType(MediaType.APPLICATION_JSON))
+    public void getAllEmployees() throws Exception {
+        mockMvc.perform(get("/employee").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print());
     }
 
     @Test
-    public void getDepartmentById() throws Exception {
-        mockMvc.perform(get("/department/0").contentType(MediaType.APPLICATION_JSON))
+    public void getEmployeesByDepartmentId() throws Exception {
+        mockMvc.perform(get("/employee").contentType(MediaType.APPLICATION_JSON).param("department","0"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print());
     }
 
     @Test
-    public void addDepartment() throws Exception {
-        mockMvc.perform(post("/department").contentType(MediaType.APPLICATION_JSON).content("{\"id\":6,\"name\":\"Test\"}"))
+    public void getEmployeeById() throws Exception {
+        mockMvc.perform(get("/employee/0").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andDo(print());
+    }
+
+    @Test
+    public void addEmployee() throws Exception {
+        mockMvc.perform(post("/employee").contentType(MediaType.APPLICATION_JSON).content("{\"id\":0,\"full_name\":\"Михаленя Андрей Сергеевич\",\"date_of_birth\":\"1989-02-24\",\"department_id\":2,\"salary\":475.14}"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
     @Test
-    public void updateDepartment() throws Exception {
-        mockMvc.perform(put("/department").contentType(MediaType.APPLICATION_JSON).content("{\"id\":5,\"name\":\"Снабжения\"}"))
+    public void updateEmployee() throws Exception {
+        mockMvc.perform(put("/employee").contentType(MediaType.APPLICATION_JSON).content("{\"id\":0,\"full_name\":\"Михаленя Андрей Сергеевич\",\"date_of_birth\":\"1989-02-24\",\"department_id\":2,\"salary\":475.14}"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
     @Test
-    public void deleteDepartment() throws Exception {
-        mockMvc.perform(delete("/department/5").contentType(MediaType.APPLICATION_JSON))
+    public void deleteEmployee() throws Exception {
+        mockMvc.perform(delete("/employee/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
 
 }
