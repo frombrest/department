@@ -21,7 +21,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:test-dao.xml"})
+@ContextConfiguration(locations = {"classpath:test-webservice.xml"})
 public class WebAppServiceImplTest {
 
     private static final String RawDataDepartment6 = "{\"id\":6,\"name\":\"Отдел номер 6\"}";
