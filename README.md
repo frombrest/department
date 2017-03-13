@@ -23,3 +23,9 @@ Access addresses:
 **webapp.war**
 
     http://localhost:8080/departmentweb/departments
+
+
+
+by Aliaksandr Parfianiuk
+
+frombrest@gmail.com
