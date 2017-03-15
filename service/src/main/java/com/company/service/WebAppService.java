@@ -6,24 +6,100 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by frombrest on 28.2.17.
+ * Interface describes the methods for working
+ * with data used in functioning web application
+ *
+ * @author Aliaksandr Parfianiuk frombrest@gmail.com
+ *
  */
-
-
 public interface WebAppService {
 
+    /**
+     * Method returns a map of appropriate values id of the departments and the average salary
+     * @return Map{Key: Department id; Value: Average salary}
+     */
     public Map<Integer, Double> getAverageSalary();
+
+    /**
+     * Method return an array of employees of the target
+     * department were born in the target date
+     * @param departmentId ID of the target department
+     * @param dateOfBirth target date
+     * @return list of entity employees
+     */
     public List<Employee> searchEmployeesByDateOfBirth(int departmentId, String dateOfBirth);
+
+    /**
+     * Method return an array of employees of the target
+     * department born between the dates
+     * @param departmentId ID of the target department
+     * @param dateFrom start date of period
+     * @param dateTo date of end of period
+     * @return list of entity employees
+     */
     public List<Employee> searchEmployeesByIntervalOfBirthdates(int departmentId, String dateFrom, String dateTo);
+
+    /**
+     * Method perform request to REST service for create department
+     * @param department entity of the created department
+     */
     public void createDepartment(Department department);
+
+    /**
+     * Method perform request to REST service to get department entity with the same id
+     * @param id ID of the target department
+     * @return Department entity
+     */
     public Department getDepartmentById(int id);
+
+    /**
+     * Method perform request to REST service to get an array of all departments
+     * @return Array of departments entity
+     */
     public Department[] getDepartments();
+
+    /**
+     * Method perform request to REST service for updating department
+     * @param department entity of the modified department
+     */
     public void updateDepartment(Department department);
+
+    /**
+     * Method perform request to REST service for delete employee
+     * @param id of the deletable employee
+     */
     public void deleteDepartmentById(int id);
+
+    /**
+     * Method perform request to REST service for create employee
+     * @param employee entity of the created employee
+     */
     public void createEmployee(Employee employee);
+
+    /**
+     * Method perform request to REST service to get employee entity with the same id
+     * @param id ID of the target employee
+     * @return employee entity
+     */
     public Employee getEmployeeById(int id);
+
+    /**
+     * Method perform request to REST service to get an array of employees of the target department
+     * @param id ID of the target department
+     * @return array of emploees entity
+     */
     public Employee[] getEmployeesByDepartmentId(int id);
+
+    /**
+     * Method perform request to REST service for updating employee
+     * @param employee entity of the modified employee
+     */
     public void updateEmployee(Employee employee);
+
+    /**
+     * Method perform request to REST service for removal employee with the same id
+     * @param id ID of the deletable employee
+     */
     public void deleteEmployeeById(int id);
 
 }
