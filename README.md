@@ -15,12 +15,12 @@ Build the project:
 
 Access addresses:
 
-**rest.war**
+**departmentrest.war**
 
     http://localhost:8080/departmentrest/department
     http://localhost:8080/departmentrest/employee
 
-**webapp.war**
+**departmentweb.war**
 
     http://localhost:8080/departmentweb/departments
 
