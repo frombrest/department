@@ -3,9 +3,9 @@ Department
 
 The project consists of two cooperating applications, designed to work with information about employees and departments.
 
-**rest.war** — REST service providing access to a database of employees and departments.
+**departmentrest.war** — REST service providing access to a database of employees and departments.
 
-**webapp.war** — Web application providing an interface for working with the REST service.
+**departmentweb.war** — Web application providing an interface for working with the REST service.
 
 Usage
 -----
