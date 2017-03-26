@@ -3,6 +3,8 @@ package com.company.service;
 import com.company.dao.DepartmentDAO;
 import com.company.model.Department;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import java.util.List;
  *
  */
 @Service(value = "departmentService")
+@Transactional
 public class DepartmentServiceImpl implements DepartmentService {
 
     /**
