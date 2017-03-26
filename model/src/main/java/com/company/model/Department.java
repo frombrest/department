@@ -74,4 +74,44 @@ public class Department {
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * Method for comparing objects of this type
+     * @param o the object for comparison
+     * @return true if the objects are identical
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Department)) return false;
+
+        Department that = (Department) o;
+
+        if (getId() != that.getId()) return false;
+        return getName() != null ? getName().equals(that.getName()) : that.getName() == null;
+    }
+
+    /**
+     * Method to get the hash code of the object
+     * @return int value of the hash code of the object
+     */
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        return result;
+    }
+
+    /**
+     * Method to get a string representation of the object
+     * @return a string description of the object
+     */
+    @Override
+    public String toString() {
+        return "Department{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
 }

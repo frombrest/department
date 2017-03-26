@@ -150,4 +150,57 @@ public class Employee {
     public void setSalary(double salary) {
         this.salary = salary;
     }
+
+    /**
+     * Method for comparing objects of this type
+     * @param o the object for comparison
+     * @return true if the objects are identical
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Employee)) return false;
+
+        Employee employee = (Employee) o;
+
+        if (getId() != employee.getId()) return false;
+        if (getDepartment_id() != employee.getDepartment_id()) return false;
+        if (Double.compare(employee.getSalary(), getSalary()) != 0) return false;
+        if (getFull_name() != null ? !getFull_name().equals(employee.getFull_name()) : employee.getFull_name() != null)
+            return false;
+        return getDate_of_birth() != null ? getDate_of_birth().equals(employee.getDate_of_birth()) : employee.getDate_of_birth() == null;
+    }
+
+    /**
+     * Method to get the hash code of the object
+     * @return int value of the hash code of the object
+     */
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = getId();
+        result = 31 * result + (getFull_name() != null ? getFull_name().hashCode() : 0);
+        result = 31 * result + (getDate_of_birth() != null ? getDate_of_birth().hashCode() : 0);
+        result = 31 * result + getDepartment_id();
+        temp = Double.doubleToLongBits(getSalary());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /**
+     * Method to get a string representation of the object
+     * @return a string description of the object
+     */
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", full_name='" + full_name + '\'' +
+                ", date_of_birth=" + date_of_birth +
+                ", department_id=" + department_id +
+                ", salary=" + salary +
+                '}';
+    }
+
 }
