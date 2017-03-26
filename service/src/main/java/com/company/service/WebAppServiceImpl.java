@@ -5,6 +5,7 @@ import com.company.model.Employee;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.text.DecimalFormat;
@@ -30,8 +31,22 @@ public class WebAppServiceImpl implements WebAppService {
 
     /**
      * Default Web-app URL
+     * http://localhost:8080/departmentrest/
      */
-    private final static String APPURL = "http://localhost:8080/departmentrest/";
+    @Value("${service.protocol}://${service.host}:${service.port}/${service.prefix}/")
+    private String APPURL;
+
+    /**
+     * Default department URL
+     */
+    @Value("${point.department}")
+    private String DEPARTMENTPOINT;
+
+    /**
+     * Default employee URL
+     */
+    @Value("${point.employee}")
+    private String EMPLOYEEPOINT;
 
     /**
      * Field for injection Spring REST Template bean
@@ -156,7 +171,7 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public void createDepartment(Department department) {
-        restTemplate.postForObject(APPURL + "department/", department, Department.class);
+        restTemplate.postForObject(APPURL + DEPARTMENTPOINT, department, Department.class);
     }
 
     /**
@@ -166,7 +181,7 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public Department getDepartmentById(int id) {
-        return restTemplate.getForObject(APPURL + "department/" + id, Department.class);
+        return restTemplate.getForObject(APPURL + DEPARTMENTPOINT + "/" + id, Department.class);
     }
 
     /**
@@ -175,7 +190,7 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public Department[] getDepartments() {
-        return restTemplate.getForObject(APPURL + "department", Department[].class);
+        return restTemplate.getForObject(APPURL + DEPARTMENTPOINT, Department[].class);
     }
 
     /**
@@ -184,7 +199,7 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public void updateDepartment(Department department) {
-        restTemplate.put(APPURL + "department/", department, Department.class);
+        restTemplate.put(APPURL + DEPARTMENTPOINT, department, Department.class);
     }
 
     /**
@@ -193,7 +208,7 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public void deleteDepartmentById(int id) {
-        restTemplate.delete(APPURL + "department/" + id);
+        restTemplate.delete(APPURL + DEPARTMENTPOINT + "/" + id);
     }
 
     /**
@@ -202,7 +217,7 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public void createEmployee(Employee employee) {
-        restTemplate.postForObject(APPURL + "employee/", employee, Employee.class);
+        restTemplate.postForObject(APPURL + EMPLOYEEPOINT, employee, Employee.class);
     }
 
     /**
@@ -212,7 +227,7 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public Employee getEmployeeById(int id) {
-        return restTemplate.getForObject(APPURL + "employee/"+id, Employee.class);
+        return restTemplate.getForObject(APPURL + EMPLOYEEPOINT + "/" + id, Employee.class);
     }
 
     /**
@@ -224,7 +239,7 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public Employee[] getEmployeesByDepartmentId(int id) {
-        return restTemplate.getForObject(APPURL + "employee/?department=" + id, Employee[].class);
+        return restTemplate.getForObject(APPURL + EMPLOYEEPOINT + "/?department=" + id, Employee[].class);
     }
 
     /**
@@ -233,7 +248,7 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public void updateEmployee(Employee employee) {
-        restTemplate.put(APPURL + "employee/", employee, Employee.class);
+        restTemplate.put(APPURL + EMPLOYEEPOINT, employee, Employee.class);
     }
 
     /**
@@ -242,7 +257,7 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public void deleteEmployeeById(int id) {
-        restTemplate.delete(APPURL + "employee/" + id);
+        restTemplate.delete(APPURL + EMPLOYEEPOINT + "/" + id);
     }
 
 }

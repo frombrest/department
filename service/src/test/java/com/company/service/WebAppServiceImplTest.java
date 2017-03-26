@@ -5,6 +5,7 @@ import com.company.model.Employee;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -39,6 +40,15 @@ public class WebAppServiceImplTest {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${service.protocol}://${service.host}:${service.port}/${service.prefix}/")
+    private String APPURL;
+
+    @Value("${point.department}")
+    private String DEPARTMENTPOINT;
+
+    @Value("${point.employee}")
+    private String EMPLOYEEPOINT;
+
     @Before
     public void prepare() {
         mockServer = MockRestServiceServer.createServer(restTemplate);
@@ -46,10 +56,10 @@ public class WebAppServiceImplTest {
 
     @Test
     public void getAverageSalary() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/department"))
+        mockServer.expect(requestTo(APPURL + DEPARTMENTPOINT))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(RawDataDepartmentList, MediaType.APPLICATION_JSON_UTF8));
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/employee/?department=6"))
+        mockServer.expect(requestTo(APPURL+ EMPLOYEEPOINT + "/?department=6"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(RawDataEmployees, MediaType.APPLICATION_JSON_UTF8));
                 Assert.assertTrue(webAppService.getAverageSalary().get(6)==537.54);
@@ -60,7 +70,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void searchEmployeesByDateOfBirth() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/employee/?department=6"))
+        mockServer.expect(requestTo(APPURL+ EMPLOYEEPOINT + "/?department=6"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(RawDataEmployees, MediaType.APPLICATION_JSON_UTF8));
         Assert.assertTrue(webAppService.searchEmployeesByDateOfBirth(6, "1987-09-13").size()==2);
@@ -70,21 +80,21 @@ public class WebAppServiceImplTest {
 
     @Test
     public void searchEmployeesByIntervalOfBirthdates() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/employee/?department=6"))
+        mockServer.expect(requestTo(APPURL+ EMPLOYEEPOINT + "/?department=6"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(RawDataEmployees, MediaType.APPLICATION_JSON_UTF8));
         Assert.assertTrue(webAppService.searchEmployeesByIntervalOfBirthdates(6,"", "1987-06-24" ).size()==9);
         mockServer.verify();
         mockServer.reset();
 
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/employee/?department=6"))
+        mockServer.expect(requestTo(APPURL+ EMPLOYEEPOINT + "/?department=6"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(RawDataEmployees, MediaType.APPLICATION_JSON_UTF8));
         Assert.assertTrue(webAppService.searchEmployeesByIntervalOfBirthdates(6,"1987-06-24", "" ).size()==10);
         mockServer.verify();
         mockServer.reset();
 
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/employee/?department=6"))
+        mockServer.expect(requestTo(APPURL+ EMPLOYEEPOINT + "/?department=6"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(RawDataEmployees, MediaType.APPLICATION_JSON_UTF8));
         Assert.assertTrue(webAppService.searchEmployeesByIntervalOfBirthdates(6,"1987-06-24", "1987-06-24" ).size()==1);
@@ -94,7 +104,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void createDepartment() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/department/"))
+        mockServer.expect(requestTo(APPURL + DEPARTMENTPOINT))
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(withSuccess("", MediaType.APPLICATION_JSON_UTF8));
         webAppService.createDepartment(department);
@@ -104,7 +114,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void getDepartmentById() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/department/6"))
+        mockServer.expect(requestTo(APPURL + DEPARTMENTPOINT + "/6"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(RawDataDepartment6, MediaType.APPLICATION_JSON_UTF8));
         Assert.assertNotNull(webAppService.getDepartmentById(6));
@@ -114,7 +124,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void getDepartments() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/department"))
+        mockServer.expect(requestTo(APPURL + DEPARTMENTPOINT))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(RawDataDepartment, MediaType.APPLICATION_JSON_UTF8));
         Department[] test =  webAppService.getDepartments();
@@ -126,7 +136,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void updateDepartment() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/department/"))
+        mockServer.expect(requestTo(APPURL + DEPARTMENTPOINT))
                 .andExpect(method(HttpMethod.PUT))
                 .andRespond(withSuccess("", MediaType.APPLICATION_JSON_UTF8));
         webAppService.updateDepartment(department);
@@ -136,7 +146,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void deleteDepartmentById() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/department/6"))
+        mockServer.expect(requestTo(APPURL + DEPARTMENTPOINT + "/6"))
                 .andExpect(method(HttpMethod.DELETE))
                 .andRespond(withSuccess("", MediaType.APPLICATION_JSON_UTF8));
         webAppService.deleteDepartmentById(6);
@@ -146,7 +156,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void createEmployee() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/employee/"))
+        mockServer.expect(requestTo(APPURL+ EMPLOYEEPOINT))
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(withSuccess("", MediaType.APPLICATION_JSON_UTF8));
         webAppService.createEmployee(employee);
@@ -156,7 +166,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void getEmployeeById() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/employee/6"))
+        mockServer.expect(requestTo(APPURL+ EMPLOYEEPOINT + "/6"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(RawDataEmployee6, MediaType.APPLICATION_JSON_UTF8));
         Assert.assertNotNull(webAppService.getEmployeeById(6));
@@ -166,7 +176,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void getEmployeesByDepartmentId() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/employee/?department=6"))
+        mockServer.expect(requestTo(APPURL+ EMPLOYEEPOINT + "/?department=6"))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(RawDataEmployees, MediaType.APPLICATION_JSON_UTF8));
         Assert.assertNotNull(webAppService.getEmployeesByDepartmentId(6));
@@ -176,7 +186,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void updateEmployee() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/employee/"))
+        mockServer.expect(requestTo(APPURL+ EMPLOYEEPOINT))
                 .andExpect(method(HttpMethod.PUT))
                 .andRespond(withSuccess("", MediaType.APPLICATION_JSON_UTF8));
         webAppService.updateEmployee(employee);
@@ -186,7 +196,7 @@ public class WebAppServiceImplTest {
 
     @Test
     public void deleteEmployeeById() throws Exception {
-        mockServer.expect(requestTo("http://localhost:8080/departmentrest/employee/6"))
+        mockServer.expect(requestTo(APPURL+ EMPLOYEEPOINT + "/6"))
                 .andExpect(method(HttpMethod.DELETE))
                 .andRespond(withSuccess("", MediaType.APPLICATION_JSON_UTF8));
         webAppService.deleteEmployeeById(6);
