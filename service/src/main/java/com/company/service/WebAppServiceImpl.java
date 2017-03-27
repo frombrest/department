@@ -7,12 +7,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class implements methods for working
@@ -28,6 +31,17 @@ public class WebAppServiceImpl implements WebAppService {
      * log4j Logger object
      */
     private final static Logger logger = LogManager.getLogger(WebAppServiceImpl.class);
+
+    /**
+     * Method for checking date format (yyyy-MM-dd)
+     * @param date String with date
+     * @return boolean value
+     */
+    private boolean dateChecker(String date) {
+        Pattern p = Pattern.compile("^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$");
+        Matcher m = p.matcher(date);
+        return m.matches();
+    }
 
     /**
      * Default Web-app URL
@@ -92,6 +106,8 @@ public class WebAppServiceImpl implements WebAppService {
      */
     @Override
     public List<Employee> searchEmployeesByDateOfBirth(int departmentId, String dateOfBirth) {
+        if (!this.dateChecker(dateOfBirth))
+            throw new RestClientException("Bad date format");
         List<Employee> result = new ArrayList<>();
         logger.debug("Show employees form department:" + departmentId + " with filter by date of birth:" + dateOfBirth);
         Employee[] employees = this.getEmployeesByDepartmentId(departmentId);
@@ -127,7 +143,7 @@ public class WebAppServiceImpl implements WebAppService {
                     employerDate = sdf.parse(employee.getDate_of_birth().toString());
                     toDate = sdf.parse(dateTo);
                 } catch (ParseException exc) {
-                    logger.debug(exc);
+                        throw new RestClientException("Bad date format");
                 }
 
                 if (employerDate.compareTo(toDate)<=0){
@@ -141,7 +157,7 @@ public class WebAppServiceImpl implements WebAppService {
                     employerDate = sdf.parse(employee.getDate_of_birth().toString());
                     fromDate = sdf.parse(dateFrom);
                 } catch (ParseException exc) {
-                    logger.debug(exc);
+                    throw new RestClientException("Bad date format");
                 }
                 if (employerDate.compareTo(fromDate)>=0){
                     result.add(employee);
@@ -155,7 +171,7 @@ public class WebAppServiceImpl implements WebAppService {
                     fromDate = sdf.parse(dateFrom);
                     toDate = sdf.parse(dateTo);
                 } catch (ParseException exc) {
-                    logger.debug(exc);
+                    throw new RestClientException("Bad date format");
                 }
                 if ((employerDate.compareTo(fromDate)>=0) & (employerDate.compareTo(toDate)<=0)){
                     result.add(employee);
@@ -170,7 +186,7 @@ public class WebAppServiceImpl implements WebAppService {
      * @param department entity of the created department
      */
     @Override
-    public void createDepartment(Department department) {
+    public void createDepartment(Department department) throws RestClientException {
         restTemplate.postForObject(APPURL + DEPARTMENTPOINT, department, Department.class);
     }
 
@@ -180,7 +196,7 @@ public class WebAppServiceImpl implements WebAppService {
      * @return Department entity
      */
     @Override
-    public Department getDepartmentById(int id) {
+    public Department getDepartmentById(int id) throws RestClientException {
         return restTemplate.getForObject(APPURL + DEPARTMENTPOINT + "/" + id, Department.class);
     }
 
@@ -189,7 +205,7 @@ public class WebAppServiceImpl implements WebAppService {
      * @return Array of departments entity
      */
     @Override
-    public Department[] getDepartments() {
+    public Department[] getDepartments() throws RestClientException {
         return restTemplate.getForObject(APPURL + DEPARTMENTPOINT, Department[].class);
     }
 
@@ -198,7 +214,7 @@ public class WebAppServiceImpl implements WebAppService {
      * @param department entity of the modified department
      */
     @Override
-    public void updateDepartment(Department department) {
+    public void updateDepartment(Department department) throws RestClientException {
         restTemplate.put(APPURL + DEPARTMENTPOINT, department, Department.class);
     }
 
@@ -207,7 +223,7 @@ public class WebAppServiceImpl implements WebAppService {
      * @param id of the deletable employee
      */
     @Override
-    public void deleteDepartmentById(int id) {
+    public void deleteDepartmentById(int id) throws RestClientException {
         restTemplate.delete(APPURL + DEPARTMENTPOINT + "/" + id);
     }
 
@@ -216,7 +232,7 @@ public class WebAppServiceImpl implements WebAppService {
      * @param employee entity of the created employee
      */
     @Override
-    public void createEmployee(Employee employee) {
+    public void createEmployee(Employee employee) throws RestClientException {
         restTemplate.postForObject(APPURL + EMPLOYEEPOINT, employee, Employee.class);
     }
 
@@ -226,7 +242,7 @@ public class WebAppServiceImpl implements WebAppService {
      * @return employee entity
      */
     @Override
-    public Employee getEmployeeById(int id) {
+    public Employee getEmployeeById(int id) throws RestClientException {
         return restTemplate.getForObject(APPURL + EMPLOYEEPOINT + "/" + id, Employee.class);
     }
 
@@ -238,7 +254,7 @@ public class WebAppServiceImpl implements WebAppService {
      * @return array of emploees entity
      */
     @Override
-    public Employee[] getEmployeesByDepartmentId(int id) {
+    public Employee[] getEmployeesByDepartmentId(int id) throws RestClientException {
         return restTemplate.getForObject(APPURL + EMPLOYEEPOINT + "/?department=" + id, Employee[].class);
     }
 
@@ -247,7 +263,7 @@ public class WebAppServiceImpl implements WebAppService {
      * @param employee entity of the modified employee
      */
     @Override
-    public void updateEmployee(Employee employee) {
+    public void updateEmployee(Employee employee) throws RestClientException {
         restTemplate.put(APPURL + EMPLOYEEPOINT, employee, Employee.class);
     }
 
@@ -256,7 +272,7 @@ public class WebAppServiceImpl implements WebAppService {
      * @param id ID of the deletable employee
      */
     @Override
-    public void deleteEmployeeById(int id) {
+    public void deleteEmployeeById(int id) throws RestClientException {
         restTemplate.delete(APPURL + EMPLOYEEPOINT + "/" + id);
     }
 
