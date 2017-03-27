@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.company.model.Department;
@@ -81,6 +82,7 @@ public class DepartmentJdbcDAOTest {
     @Test
     public void delete() throws Exception {
         String testName = "TestDeleteMethod";
+        boolean thrown = false;
         int i = 0;
         for (Department dep:departmentJdbcDAO.getAll()) {
             if(dep.getName().equals(testName)){
@@ -88,6 +90,12 @@ public class DepartmentJdbcDAOTest {
             }
         }
         departmentJdbcDAO.delete(i);
-        Assert.assertNull(departmentJdbcDAO.getById(i));
+        try {
+            departmentJdbcDAO.getById(i);
+        } catch (EmptyResultDataAccessException exc){
+            thrown = true;
+        }
+        Assert.assertTrue(thrown);
+
     }
 }

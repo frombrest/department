@@ -2,6 +2,7 @@ package com.company.service;
 
 import com.company.dao.EmployeeDAO;
 import com.company.model.Employee;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Method is intended for injection DAO bean
      * @param employeeDAO
      */
-    public void setEmployeeDAO(EmployeeDAO employeeDAO) {
+    public void setEmployeeDAO(EmployeeDAO employeeDAO) throws DataAccessException {
         this.employeeDAO = employeeDAO;
     }
 
@@ -38,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Method returns a list of all employees from the storage
      * @return list of all entity employees
      */
-    public List<Employee> getAllEmployees() {
+    public List<Employee> getAllEmployees() throws DataAccessException {
         return employeeDAO.getAll();
     }
 
@@ -47,7 +48,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @param id of the target department
      * @return list of entity employees
      */
-    public List<Employee> getEmployeesByDepartmentId(int id) {
+    public List<Employee> getEmployeesByDepartmentId(int id) throws DataAccessException {
         return employeeDAO.getByDepartmentId(id);
     }
 
@@ -56,7 +57,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @param id of the target employee
      * @return employee entity
      */
-    public Employee getEmployeeById(int id) {
+    public Employee getEmployeeById(int id) throws DataAccessException {
         return employeeDAO.getById(id);
     }
 
@@ -64,7 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Method creates a employee in the storage
      * @param employee entity of the created employee
      */
-    public void addEmployee(Employee employee) {
+    public void addEmployee(Employee employee) throws DataAccessException {
         employeeDAO.create(employee);
     }
 
@@ -72,7 +73,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Method makes changes to employee in the storage
      * @param employee entity of the modified employee
      */
-    public void updateEmployee(Employee employee) {
+    public void updateEmployee(Employee employee) throws DataAccessException {
         employeeDAO.update(employee);
     }
 
@@ -80,7 +81,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * Method remove employee with the same id from the storage
      * @param id of the deletable employee
      */
-    public void deleteEmployee(int id) {
+    public void deleteEmployee(int id) throws DataAccessException {
         employeeDAO.delete(id);
     }
 }

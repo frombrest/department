@@ -1,6 +1,7 @@
 package com.company.dao;
 
 import com.company.model.Employee;
+import org.springframework.dao.DataAccessException;
 import java.util.List;
 
 /**
@@ -18,36 +19,36 @@ public interface EmployeeDAO {
      * @param id of the target employee
      * @return employee entity
      */
-    public Employee getById(int id);
+    Employee getById(int id) throws DataAccessException;
 
     /**
      * Method returns a list of all employees from the the target department
      * @param id of the target department
      * @return list of entity employees
      */
-    public List<Employee> getByDepartmentId(int id);
+    List<Employee> getByDepartmentId(int id) throws DataAccessException;
 
     /**
      * Method returns a list of all employees from the storage
      * @return list of all entity employees
      */
-    public List<Employee> getAll();
+    List<Employee> getAll() throws DataAccessException;
 
     /**
      * Method remove employee with the same id from the storage
      * @param id of the deletable employee
      */
-    public void delete(int id);
+    void delete(int id) throws DataAccessException;
 
     /**
      * Method creates a employee in the storage
      * @param employee entity of the created employee
      */
-    public void create(Employee employee);
+    void create(Employee employee) throws DataAccessException;
 
     /**
      * Method makes changes to employee in the storage
      * @param employee entity of the modified employee
      */
-    public void update(Employee employee);
+    void update(Employee employee) throws DataAccessException;
 }

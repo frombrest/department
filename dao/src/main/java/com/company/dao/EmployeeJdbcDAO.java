@@ -3,7 +3,7 @@ package com.company.dao;
 import com.company.model.Employee;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -49,9 +49,8 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
      * @param id of the target employee
      * @return employee entity
      */
-    public Employee getById(int id) {
-        Employee employee = null;
-        try {
+    public Employee getById(int id) throws DataAccessException {
+        Employee employee;
             employee = jdbcTemplate.queryForObject(
                     "SELECT * FROM \"TW\".\"Employee\" WHERE \"id\" = ?", new Object[]{id},
                     new RowMapper<Employee>() {
@@ -66,9 +65,6 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
                         }
                     }
             );
-        } catch (EmptyResultDataAccessException exception) {
-            logger.debug("Employee with id=" + id + " not found. Result == null");
-        }
         return employee;
     }
 
@@ -78,9 +74,8 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
      * @param id of the target department
      * @return list of entity employees
      */
-    public List<Employee> getByDepartmentId(int id) {
-        List<Employee> listEmployee = null;
-        try {
+    public List<Employee> getByDepartmentId(int id) throws DataAccessException {
+        List<Employee> listEmployee;
             listEmployee = jdbcTemplate.query(
                     "SELECT * FROM \"TW\".\"Employee\" WHERE \"department_id\" = ?",
                     new Object[]{id}, new RowMapper<Employee>() {
@@ -95,9 +90,6 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
                         }
                     }
             );
-        } catch (EmptyResultDataAccessException exception) {
-            logger.debug("Employees not found. Result == null");
-        }
         return listEmployee;
     }
 
@@ -105,9 +97,8 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
      * Method returns a list of all employees from the table "TW"."Employee"
      * @return list of all entity employees
      */
-    public List<Employee> getAll() {
-        List<Employee> listEmployee = null;
-        try {
+    public List<Employee> getAll() throws DataAccessException {
+        List<Employee> listEmployee;
             listEmployee = jdbcTemplate.query(
                     "SELECT * FROM \"TW\".\"Employee\"", new RowMapper<Employee>() {
                         public Employee mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -122,9 +113,6 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
                     }
 
             );
-        } catch (EmptyResultDataAccessException exception) {
-            logger.debug("Employees not found. Result == null");
-        }
         return listEmployee;
     }
 
@@ -132,7 +120,7 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
      * Method remove employee with the same id from the table "TW"."Employee"
      * @param id of the deletable employee
      */
-    public void delete(int id) {
+    public void delete(int id) throws DataAccessException {
         jdbcTemplate.update("DELETE FROM \"TW\".\"Employee\" WHERE \"id\"= ?;", id);
         logger.debug("Delete employee with id=" + id);
     }
@@ -141,7 +129,7 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
      * Method creates a employee in the table "TW"."Employee"
      * @param employee entity of the created employee
      */
-    public void create(Employee employee) {
+    public void create(Employee employee) throws DataAccessException {
         jdbcTemplate.update("INSERT INTO \"TW\".\"Employee\" (\"full_name\", \"date_of_birth\", " +
                         "\"department_id\", \"salary\") VALUES (?, ?, ?, ?);", employee.getFull_name(),
                 employee.getDate_of_birth().toString(), employee.getDepartment_id(), employee.getSalary());
@@ -152,7 +140,7 @@ public class EmployeeJdbcDAO implements EmployeeDAO {
      * Method makes changes to employee in the table "TW"."Employee"
      * @param employee entity of the modified employee
      */
-    public void update(Employee employee) {
+    public void update(Employee employee) throws DataAccessException {
         jdbcTemplate.update("UPDATE \"TW\".\"Employee\" SET \"full_name\"=?,\"date_of_birth\"=?, " +
                         "\"department_id\"=?, \"salary\"=? WHERE \"id\"=?;", employee.getFull_name(),
                 employee.getDate_of_birth().toString(), employee.getDepartment_id(), employee.getSalary(),

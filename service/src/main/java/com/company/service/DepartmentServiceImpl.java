@@ -2,6 +2,7 @@ package com.company.service;
 
 import com.company.dao.DepartmentDAO;
 import com.company.model.Department;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,7 @@ public class DepartmentServiceImpl implements DepartmentService {
      * Method returns a list of all departments from the storage
      * @return List of all entity departments
      */
-    public List<Department> getAllDepartments() {
+    public List<Department> getAllDepartments() throws DataAccessException {
         return departmentDAO.getAll();
     }
 
@@ -47,7 +48,7 @@ public class DepartmentServiceImpl implements DepartmentService {
      * @param id ID of the target department
      * @return Department entity
      */
-    public Department getDepartmentById(int id) {
+    public Department getDepartmentById(int id) throws DataAccessException {
         return departmentDAO.getById(id);
     }
 
@@ -55,7 +56,7 @@ public class DepartmentServiceImpl implements DepartmentService {
      * Method add a department in the storage
      * @param department entity of the new department
      */
-    public void addDepartment(Department department) {
+    public void addDepartment(Department department) throws DataAccessException {
         departmentDAO.create(department);
     }
 
@@ -63,7 +64,7 @@ public class DepartmentServiceImpl implements DepartmentService {
      * Method makes changes to department in the storage
      * @param department entity of the modified department
      */
-    public void updateDepartment(Department department) {
+    public void updateDepartment(Department department) throws DataAccessException {
         departmentDAO.update(department);
     }
 
@@ -71,7 +72,7 @@ public class DepartmentServiceImpl implements DepartmentService {
      * Method remove department with the same id from the storage
      * @param id of the deletable department
      */
-    public void deleteDepartment(int id) {
+    public void deleteDepartment(int id) throws DataAccessException {
         departmentDAO.delete(id);
     }
 }

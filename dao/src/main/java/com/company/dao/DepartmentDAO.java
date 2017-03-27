@@ -1,6 +1,7 @@
 package com.company.dao;
 
 import com.company.model.Department;
+import org.springframework.dao.DataAccessException;
 import java.util.List;
 
 /**
@@ -18,29 +19,29 @@ public interface DepartmentDAO {
      * @param id of the target department
      * @return department entity
      */
-    public Department getById(int id);
+    Department getById(int id) throws DataAccessException;
 
     /**
      * Method returns a list of all departments from the storage
      * @return list of all entity departments
      */
-    public List<Department> getAll();
+    List<Department> getAll() throws DataAccessException;
 
     /**
      * Method remove department with the same id from the storage
      * @param id of the deletable department
      */
-    public void delete(int id);
+    void delete(int id) throws DataAccessException;
 
     /**
      * Method creates a department in the storage
      * @param department entity of the created department
      */
-    public void create(Department department);
+    void create(Department department) throws DataAccessException;
 
     /**
      * Method makes changes to department in the storage
      * @param department entity of the modified department
      */
-    public void update(Department department);
+    void update(Department department) throws DataAccessException;
 }
